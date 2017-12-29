@@ -29,6 +29,12 @@ public class AbsentConfigurator extends AbstractConfigurator {
         super(url);
     }
 
+    /**
+     * 二话不说，直接覆盖之前配置
+     * @param currentUrl
+     * @param configUrl
+     * @return
+     */
     public URL doConfigure(URL currentUrl, URL configUrl) {
         return currentUrl.addParametersIfAbsent(configUrl.getParameters());
     }

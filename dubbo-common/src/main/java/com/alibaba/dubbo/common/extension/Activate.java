@@ -38,6 +38,8 @@ import java.lang.annotation.Target;
  * @see SPI
  * @see URL
  * @see ExtensionLoader
+ *
+ * Activate表示选择性加载某个指定的class
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

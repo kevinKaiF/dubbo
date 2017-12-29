@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * ModuleConfig
+ * 对应dubbo:module标签
  *
  * @export
  */

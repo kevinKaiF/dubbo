@@ -63,7 +63,7 @@ import static com.alibaba.dubbo.common.utils.NetUtils.isInvalidPort;
 
 /**
  * ServiceConfig
- *
+ * 对应dubbo:service标签，暴露服务
  * @export
  */
 public class ServiceConfig<T> extends AbstractServiceConfig {

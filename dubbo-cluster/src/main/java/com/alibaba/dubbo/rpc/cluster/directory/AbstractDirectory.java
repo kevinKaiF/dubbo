@@ -66,16 +66,25 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
         setRouters(routers);
     }
 
+    /**
+     * 会对invokers做过滤筛选
+     *
+     * @param invocation
+     * @return
+     * @throws RpcException
+     */
     public List<Invoker<T>> list(Invocation invocation) throws RpcException {
         if (destroyed) {
             throw new RpcException("Directory already destroyed .url: " + getUrl());
         }
         List<Invoker<T>> invokers = doList(invocation);
+        // 有多个过滤规则
         List<Router> localRouters = this.routers; // local reference
         if (localRouters != null && localRouters.size() > 0) {
             for (Router router : localRouters) {
                 try {
                     if (router.getUrl() == null || router.getUrl().getParameter(Constants.RUNTIME_KEY, false)) {
+                        // 迭代过滤
                         invokers = router.route(invokers, getConsumerUrl(), invocation);
                     }
                 } catch (Throwable t) {

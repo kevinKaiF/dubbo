@@ -43,6 +43,12 @@ import java.util.concurrent.TimeUnit;
  *
  * <a href="http://en.wikipedia.org/wiki/Failback">Failback</a>
  *
+ * faiback，失败后会异步延时重试，而给客户端直接返回空的RpcResult
+ *
+ * 特点：
+ * 1.失败后会异步延迟重试，执行失败后再次尝试，如果一直失败会一直调用下去
+ * 2.失败后会立即返回客户端空的RpcResult，这个RpcResult很不适合需要返回结果的客户端调用，如果失败了，只能从客户端日志查看
+ *
  */
 public class FailbackClusterInvoker<T> extends AbstractClusterInvoker<T> {
 

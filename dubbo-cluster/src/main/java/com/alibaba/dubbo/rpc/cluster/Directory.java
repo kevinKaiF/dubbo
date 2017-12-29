@@ -27,6 +27,7 @@ import java.util.List;
  * Directory. (SPI, Prototype, ThreadSafe)
  * <p>
  * <a href="http://en.wikipedia.org/wiki/Directory_service">Directory Service</a>
+ * Directory是个特殊的Invoker，具有查找所对应的所有的Invoker的能力
  *
  * @see com.alibaba.dubbo.rpc.cluster.Cluster#join(Directory)
  */
@@ -34,6 +35,7 @@ public interface Directory<T> extends Node {
 
     /**
      * get service type.
+     * 暴露服务的接口名
      *
      * @return service type.
      */
@@ -41,6 +43,7 @@ public interface Directory<T> extends Node {
 
     /**
      * list invokers.
+     * Invocation执行请求服务所对应的所有的Invoker
      *
      * @return invokers
      */

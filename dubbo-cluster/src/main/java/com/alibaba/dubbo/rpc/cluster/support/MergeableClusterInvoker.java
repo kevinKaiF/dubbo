@@ -47,6 +47,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * MergeableClusterInvoker的意义对集群中所有的Invoker的执行结果进行merge
+ * 特点：
+ * 1.merge集群中的结果，不过代价有点高，即便是不进行merge，用其他类型的Invoker，然后客户端自己对结果自行merge也是可以的，不知道使用场景在哪里
  */
 @SuppressWarnings("unchecked")
 public class MergeableClusterInvoker<T> implements Invoker<T> {
@@ -64,6 +67,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
         List<Invoker<T>> invokers = directory.list(invocation);
 
         String merger = getUrl().getMethodParameter(invocation.getMethodName(), Constants.MERGER_KEY);
+        // 如果没有配置merger，则找个有效的invoker执行，否则找到第一个invoker执行
         if (ConfigUtils.isEmpty(merger)) { // If a method doesn't have a merger, only invoke one Group
             for (final Invoker<T> invoker : invokers) {
                 if (invoker.isAvailable()) {
@@ -81,6 +85,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
             returnType = null;
         }
 
+        // 异步执行所有的invoker，将结果保存起来
         Map<String, Future<Result>> results = new HashMap<String, Future<Result>>();
         for (final Invoker<T> invoker : invokers) {
             Future<Result> future = executor.submit(new Callable<Result>() {
@@ -129,6 +134,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
             return new RpcResult((Object) null);
         }
 
+        // 如果merger是以.开头，则反射执行返回值类型的方法
         if (merger.startsWith(".")) {
             merger = merger.substring(1);
             Method method;
@@ -148,6 +154,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
                     method.setAccessible(true);
                 }
                 result = resultList.remove(0).getValue();
+                // 对一个结果遍历执行，而且有迭代效果
                 try {
                     if (method.getReturnType() != void.class
                             && method.getReturnType().isAssignableFrom(result.getClass())) {
@@ -177,6 +184,7 @@ public class MergeableClusterInvoker<T> implements Invoker<T> {
                                 .toString());
             }
         } else {
+            // 否则找到对应的Merger对整个结果merge
             Merger resultMerger;
             if (ConfigUtils.isDefault(merger)) {
                 resultMerger = MergerFactory.getMerger(returnType);

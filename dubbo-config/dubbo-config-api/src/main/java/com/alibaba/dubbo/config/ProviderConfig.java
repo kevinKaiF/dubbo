@@ -30,6 +30,8 @@ import java.util.Arrays;
 /**
  * ProviderConfig
  *
+ * 对应dubbo:provider
+ *
  * @export
  * @see com.alibaba.dubbo.config.ProtocolConfig
  * @see com.alibaba.dubbo.config.ServiceConfig

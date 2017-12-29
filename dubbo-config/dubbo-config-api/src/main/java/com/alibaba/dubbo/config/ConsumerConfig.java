@@ -19,6 +19,10 @@ package com.alibaba.dubbo.config;
 /**
  * ConsumerConfig
  *
+ * 对应dubbo:consumer标签
+ * dubbo:consumer是对所有的消费者，即所有的dubbo:reference的统一配置
+ * 而dubbo:reference是对某一消费者的配置
+ *
  * @export
  */
 public class ConsumerConfig extends AbstractReferenceConfig {

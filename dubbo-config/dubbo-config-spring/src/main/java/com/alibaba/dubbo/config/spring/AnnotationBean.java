@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * AnnotationBean
- *
+ * 自定义的Spring bean的后置处理器
  * @export
  */
 @Deprecated

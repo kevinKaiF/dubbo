@@ -24,6 +24,7 @@ import java.util.Map;
 
 /**
  * RegistryConfig
+ * 对应dubbo:registry标签
  *
  * @export
  */

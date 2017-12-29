@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Service
+ * 服务提供者的注解
  *
  * @export
  */

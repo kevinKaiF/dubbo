@@ -24,6 +24,7 @@ import java.util.Set;
 
 /**
  * SpringExtensionFactory
+ * 对spring的ApplicationContext的扩展
  */
 public class SpringExtensionFactory implements ExtensionFactory {
 

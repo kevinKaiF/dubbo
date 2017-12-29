@@ -57,6 +57,8 @@ import static com.alibaba.dubbo.common.utils.NetUtils.isInvalidLocalHost;
 
 /**
  * ReferenceConfig
+ * 对应dubbo:reference标签
+ *
  *
  * @export
  */

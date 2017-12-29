@@ -33,6 +33,9 @@ import java.util.List;
  * Usually used to write audit logs and other operations
  *
  * <a href="http://en.wikipedia.org/wiki/Fail-safe">Fail-safe</a>
+ * fail-safe 失败就失败了，无所谓，返回空RpcResult
+ * 特点：
+ * 如果调用失败，客户端无法感知结果，不知道是正常执行还是异常执行，错误只能在日志中查看
  *
  */
 public class FailsafeClusterInvoker<T> extends AbstractClusterInvoker<T> {

@@ -28,6 +28,7 @@ import java.util.Map;
 
 /**
  * ApplicationConfig
+ * 对应dubbo:application标签
  *
  * @export
  */

@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * AbstractOverrideConfigurator
- *
+ * 配置url的辅助类
  */
 public abstract class AbstractConfigurator implements Configurator {
 

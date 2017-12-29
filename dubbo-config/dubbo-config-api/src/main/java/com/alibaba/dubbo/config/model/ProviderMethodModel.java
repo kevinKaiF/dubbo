@@ -18,10 +18,17 @@ package com.alibaba.dubbo.config.model;
 
 import java.lang.reflect.Method;
 
+/**
+ * 对服务提供者的方法封装
+ */
 public class ProviderMethodModel {
+    // 服务的方法
     private transient final Method method;
+    // 服务的方法名
     private final String methodName;
+    // 服务的方法参数
     private final String[] methodArgTypes;
+    // 服务的服务名
     private final String serviceName;
 
 

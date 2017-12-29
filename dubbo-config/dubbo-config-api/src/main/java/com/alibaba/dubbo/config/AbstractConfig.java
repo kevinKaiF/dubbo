@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 
 /**
  * Utility methods and public methods for parsing configuration
+ * 所有服务的配置的顶层抽象
  *
  * @export
  */
@@ -189,11 +190,14 @@ public abstract class AbstractConfig implements Serializable {
         for (Method method : methods) {
             try {
                 String name = method.getName();
+                // 对AbstractConfig的get方法,is方法，找到对应的属性
+                // 以属性名为key,将@Parameter标注的方法的默认值，添加到parameters的map中
                 if ((name.startsWith("get") || name.startsWith("is"))
                         && !"getClass".equals(name)
                         && Modifier.isPublic(method.getModifiers())
                         && method.getParameterTypes().length == 0
                         && isPrimitive(method.getReturnType())) {
+                    // 读取AbstractConfig的默认配置
                     Parameter parameter = method.getAnnotation(Parameter.class);
                     if (method.getReturnType() == Object.class || parameter != null && parameter.excluded()) {
                         continue;
@@ -229,6 +233,11 @@ public abstract class AbstractConfig implements Serializable {
                     } else if (parameter != null && parameter.required()) {
                         throw new IllegalStateException(config.getClass().getSimpleName() + "." + key + " == null");
                     }
+                    // 如果方法是getParameters方法，
+                    // 且是public方法
+                    // 且是无参的方法
+                    // 且返回值是map类型
+                    // 则反射调用getParameters方法，并对返回值做前缀处理，以及将“-”替换为“.”
                 } else if ("getParameters".equals(name)
                         && Modifier.isPublic(method.getModifiers())
                         && method.getParameterTypes().length == 0

@@ -30,6 +30,8 @@ import java.util.List;
 
 /**
  * BroadcastClusterInvoker
+ * BroadcastClusterInvoker的意义是给所有的provider发送请求
+ * 执行过程不管成功失败，遍历请求结束后返回结果
  *
  */
 public class BroadcastClusterInvoker<T> extends AbstractClusterInvoker<T> {
@@ -42,7 +44,9 @@ public class BroadcastClusterInvoker<T> extends AbstractClusterInvoker<T> {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Result doInvoke(final Invocation invocation, List<Invoker<T>> invokers, LoadBalance loadbalance) throws RpcException {
+        // 防御性编程
         checkInvokers(invokers, invocation);
+        // 将invokers共享到当前线程中
         RpcContext.getContext().setInvokers((List) invokers);
         RpcException exception = null;
         Result result = null;

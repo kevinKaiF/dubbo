@@ -27,6 +27,7 @@ import java.util.List;
 
 /**
  * AvailableCluster
+ * AvailableClusterInvoker的意义就是只要找到有效的invoker就可以执行调用
  *
  */
 public class AvailableClusterInvoker<T> extends AbstractClusterInvoker<T> {

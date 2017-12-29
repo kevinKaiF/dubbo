@@ -35,6 +35,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 /**
  * Abort Policy.
  * Log warn info when abort.
+ * 添加任务失败的异常通知
  */
 public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
 
@@ -54,6 +55,9 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
     }
 
     @Override
+    /**
+     * 详细地打印出线程池的信息，一定要详细地
+     */
     public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
         String msg = String.format("Thread pool is EXHAUSTED!" +
                         " Thread Name: %s, Pool Size: %d (active: %d, core: %d, max: %d, largest: %d), Task: %d (completed: %d)," +
@@ -62,6 +66,7 @@ public class AbortPolicyWithReport extends ThreadPoolExecutor.AbortPolicy {
                 e.getTaskCount(), e.getCompletedTaskCount(), e.isShutdown(), e.isTerminated(), e.isTerminating(),
                 url.getProtocol(), url.getIp(), url.getPort());
         logger.warn(msg);
+        // 异步打印出jvm栈信息
         dumpJStack();
         throw new RejectedExecutionException(msg);
     }

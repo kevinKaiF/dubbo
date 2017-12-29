@@ -25,6 +25,7 @@ import com.alibaba.dubbo.common.extension.SPI;
  *
  * @see com.alibaba.dubbo.registry.support.AbstractRegistryFactory
  */
+// Registry的工厂类
 @SPI("dubbo")
 public interface RegistryFactory {
 

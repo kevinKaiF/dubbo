@@ -25,6 +25,7 @@ import java.util.concurrent.Executor;
 
 /**
  * ThreadPool
+ * 按Url的配置参数生成线程池
  */
 @SPI("fixed")
 public interface ThreadPool {

@@ -25,10 +25,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * serviceConfig即服务提供者的配置
+ * ProviderModel对整个服务提供者配置的封装，封装了其代理类，服务名
+ */
 public class ProviderModel {
+    // 服务的名称
     private final String serviceName;
+    // 服务接口对应的impl的实例
     private final Object serviceInstance;
+    // 服务提供者的配置
     private final ServiceConfig metadata;
+    // 服务提供者可提供的所有的方法
     private final Map<String, List<ProviderMethodModel>> methods = new HashMap<String, List<ProviderMethodModel>>();
 
     public ProviderModel(String serviceName, ServiceConfig metadata, Object serviceInstance) {

@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 
 /**
  * AbstractBeanDefinitionParser
+ * dubbo标签的解析器
  *
  * @export
  */

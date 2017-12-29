@@ -20,6 +20,8 @@ import com.alibaba.dubbo.common.Node;
 
 /**
  * Invoker. (API/SPI, Prototype, ThreadSafe)
+ * invoker是调用provider过程的一种抽象，具有执行服务的能力，有服务标识的能力
+ * 每个service对应一个invoker
  *
  * @see com.alibaba.dubbo.rpc.Protocol#refer(Class, com.alibaba.dubbo.common.URL)
  * @see com.alibaba.dubbo.rpc.InvokerListener
@@ -29,6 +31,7 @@ public interface Invoker<T> extends Node {
 
     /**
      * get service interface.
+     * 暴露服务的接口名
      *
      * @return service interface.
      */
@@ -36,6 +39,7 @@ public interface Invoker<T> extends Node {
 
     /**
      * invoke.
+     * 调用服务的结果
      *
      * @param invocation
      * @return result

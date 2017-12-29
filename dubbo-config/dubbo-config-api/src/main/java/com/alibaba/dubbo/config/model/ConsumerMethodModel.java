@@ -21,15 +21,25 @@ import com.alibaba.dubbo.config.ReferenceConfig;
 
 import java.lang.reflect.Method;
 
+/**
+ * 对服务消费者的方法封装
+ */
 public class ConsumerMethodModel {
+    // 服务的方法名
     private final Method method;
+    // 服务消费的配置
     private final ReferenceConfig metadata;
 //    private final boolean isCallBack;
 //    private final boolean isFuture;
+    // 服务的参数的String名称
     private final String[] parameterTypes;
+    // 服务方法的参数类型
     private final Class<?>[] parameterClasses;
+    // 服务方法的返回值类型
     private final Class<?> returnClass;
+    // 服务方法的名称
     private final String methodName;
+    // 服务方法是否是泛型
     private final boolean generic;
 
     public ConsumerMethodModel(Method method, ReferenceConfig metadata) {

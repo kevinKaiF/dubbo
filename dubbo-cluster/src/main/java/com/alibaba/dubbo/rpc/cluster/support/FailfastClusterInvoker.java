@@ -32,6 +32,9 @@ import java.util.List;
  * Usually used for non-idempotent write operations
  *
  * <a href="http://en.wikipedia.org/wiki/Fail-fast">Fail-fast</a>
+ * fail-fast 失败了立即抛异常，这个很实用，但从服务可用性来讲还是failover更好点
+ * 特点：
+ * 立竿见影，调用失败立马抛异常，不和你废话
  *
  */
 public class FailfastClusterInvoker<T> extends AbstractClusterInvoker<T> {

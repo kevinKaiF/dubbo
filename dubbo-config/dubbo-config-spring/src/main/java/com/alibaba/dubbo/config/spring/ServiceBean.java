@@ -36,6 +36,7 @@ import java.util.Map;
 
 /**
  * ServiceFactoryBean
+ * 将serviceConfig的配置转为Spring控制的bean ServiceBean
  *
  * @export
  */

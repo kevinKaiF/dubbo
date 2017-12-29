@@ -21,6 +21,7 @@ import com.alibaba.dubbo.config.support.Parameter;
 import java.io.Serializable;
 
 /**
+ * 与methodConfig配合使用
  * @export
  */
 public class ArgumentConfig implements Serializable {

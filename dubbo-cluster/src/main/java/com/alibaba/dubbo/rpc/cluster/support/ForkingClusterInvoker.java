@@ -39,7 +39,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Invoke a specific number of invokers concurrently, usually used for demanding real-time operations, but need to waste more service resources.
  *
  * <a href="http://en.wikipedia.org/wiki/Fork_(topology)">Fork</a>
+ * fork的目的是选取一批invoker,异步请求执行
  *
+ * 特点：
+ * 1.一旦执行结果中第一个是失败的，那么就抛出异常，即便其他节点执行成功也没什么意思
+ * 2.必须所有fork出来的invoker均调用成功才可以成功
  */
 public class ForkingClusterInvoker<T> extends AbstractClusterInvoker<T> {
 

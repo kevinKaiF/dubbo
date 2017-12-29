@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * AbstractServiceConfig
+ * 对服务端的上层抽象
  *
  * @export
  */

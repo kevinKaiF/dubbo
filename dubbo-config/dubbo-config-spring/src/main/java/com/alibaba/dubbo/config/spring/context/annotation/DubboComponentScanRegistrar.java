@@ -48,6 +48,7 @@ import static org.springframework.beans.factory.support.BeanDefinitionBuilder.ro
  * @see ReferenceAnnotationBeanPostProcessor
  * @since 2.5.7
  */
+// 自定义@Import扫描
 public class DubboComponentScanRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override

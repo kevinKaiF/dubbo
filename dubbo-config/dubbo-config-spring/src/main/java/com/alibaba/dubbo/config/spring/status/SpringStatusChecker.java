@@ -65,6 +65,7 @@ public class SpringStatusChecker implements StatusChecker {
                 if (!method.isAccessible()) {
                     method.setAccessible(true);
                 }
+                // 获取Spring中配置文件的所有的配置
                 String[] configs = (String[]) method.invoke(context, new Object[0]);
                 if (configs != null && configs.length > 0) {
                     for (String config : configs) {

@@ -27,10 +27,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * 配置path，读取配置文件
+ */
 public class FileRouterFactory implements RouterFactory {
 
     public static final String NAME = "file";
 
+    // 委托给其他router执行
     private RouterFactory routerFactory;
 
     public void setRouterFactory(RouterFactory routerFactory) {

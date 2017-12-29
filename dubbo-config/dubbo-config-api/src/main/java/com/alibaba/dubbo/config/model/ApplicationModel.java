@@ -36,10 +36,12 @@ public class ApplicationModel {
     /**
      * full qualified class name -> provided service
      */
+    // key:serviceName, value:服务提供者配置的进一步封装
     private static final ConcurrentMap<String, ProviderModel> providedServices = new ConcurrentHashMap<String, ProviderModel>();
     /**
      * full qualified class name -> subscribe service
      */
+    // key:serviceName, value:服务消费者配置的进一步封装
     private static final ConcurrentMap<String, ConsumerModel> consumedServices = new ConcurrentHashMap<String, ConsumerModel>();
 
     public static final ConcurrentMap<String, Set<Invoker>> providedServicesInvoker = new ConcurrentHashMap<String, Set<Invoker>>();

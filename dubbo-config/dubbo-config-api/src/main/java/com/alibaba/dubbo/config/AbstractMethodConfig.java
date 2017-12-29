@@ -24,6 +24,9 @@ import java.util.Map;
 
 /**
  * AbstractMethodConfig
+ * 用于服务提供者和消费者的配置
+ * dubbo:service,dubbo:provider
+ * dubbo:reference,dubbo:consumer
  *
  * @export
  */

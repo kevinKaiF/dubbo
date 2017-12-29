@@ -55,6 +55,8 @@ import java.util.regex.Pattern;
  * @see com.alibaba.dubbo.common.extension.SPI
  * @see com.alibaba.dubbo.common.extension.Adaptive
  * @see com.alibaba.dubbo.common.extension.Activate
+ *
+ * 类加载器，每个interface对应一个ExtensionLoader，然后根据接口中@SPI注解加载指定的实现类
  */
 public class ExtensionLoader<T> {
 
@@ -68,6 +70,7 @@ public class ExtensionLoader<T> {
 
     private static final Pattern NAME_SEPARATOR = Pattern.compile("\\s*[,]+\\s*");
 
+    // 缓存ExtensionLoader
     private static final ConcurrentMap<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
 
     private static final ConcurrentMap<Class<?>, Object> EXTENSION_INSTANCES = new ConcurrentHashMap<Class<?>, Object>();
@@ -289,6 +292,11 @@ public class ExtensionLoader<T> {
      * Find the extension with the given name. If the specified name is not found, then {@link IllegalStateException}
      * will be thrown.
      */
+    /**
+     * 获取指定的实现类，与getAdaptiveExtension有差异
+     * @param name
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T getExtension(String name) {
         if (name == null || name.length() == 0)
@@ -431,6 +439,11 @@ public class ExtensionLoader<T> {
         }
     }
 
+    /**
+     * 获取@SPI指定的实现类
+     *
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public T getAdaptiveExtension() {
         Object instance = cachedAdaptiveInstance.get();
@@ -575,13 +588,18 @@ public class ExtensionLoader<T> {
         }
 
         Map<String, Class<?>> extensionClasses = new HashMap<String, Class<?>>();
+        // META-INF/dubbo/internal/ 加载dubbo内部配置
         loadFile(extensionClasses, DUBBO_INTERNAL_DIRECTORY);
+        // META-INF/dubbo
         loadFile(extensionClasses, DUBBO_DIRECTORY);
+        // META-INF/services
         loadFile(extensionClasses, SERVICES_DIRECTORY);
         return extensionClasses;
     }
 
     private void loadFile(Map<String, Class<?>> extensionClasses, String dir) {
+        // type 是class名称
+        // 获取指定的文件名
         String fileName = dir + type.getName();
         try {
             Enumeration<java.net.URL> urls;
@@ -607,11 +625,14 @@ public class ExtensionLoader<T> {
                                         String name = null;
                                         int i = line.indexOf('=');
                                         if (i > 0) {
+                                            // key，url的配置参数名
                                             name = line.substring(0, i).trim();
+                                            // class名称
                                             line = line.substring(i + 1).trim();
                                         }
                                         if (line.length() > 0) {
                                             Class<?> clazz = Class.forName(line, true, classLoader);
+                                            // 做校验
                                             if (!type.isAssignableFrom(clazz)) {
                                                 throw new IllegalStateException("Error when load extension class(interface: " +
                                                         type + ", class line: " + clazz.getName() + "), class "
@@ -635,6 +656,7 @@ public class ExtensionLoader<T> {
                                                     }
                                                     wrappers.add(clazz);
                                                 } catch (NoSuchMethodException e) {
+                                                    // 如果没有 clazz.getConstructor(type) 构造方法，则获取默认的构造方法
                                                     clazz.getConstructor();
                                                     if (name == null || name.length() == 0) {
                                                         name = findAnnotationName(clazz);

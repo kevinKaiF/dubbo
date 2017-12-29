@@ -23,6 +23,7 @@ import java.util.List;
 
 /**
  * MethodConfig
+ * 对应dubbo:method标签
  *
  * @export
  */

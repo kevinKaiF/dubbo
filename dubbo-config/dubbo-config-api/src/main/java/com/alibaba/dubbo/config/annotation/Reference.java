@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * Reference
+ * 服务消费者的注解
  *
  * @export
  */

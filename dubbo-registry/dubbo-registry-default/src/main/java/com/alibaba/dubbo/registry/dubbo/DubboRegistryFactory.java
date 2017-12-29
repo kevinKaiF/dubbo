@@ -40,7 +40,7 @@ import java.util.List;
  *
  */
 public class DubboRegistryFactory extends AbstractRegistryFactory {
-
+    // 服务支持的协议
     private Protocol protocol;
     private ProxyFactory proxyFactory;
     private Cluster cluster;
@@ -49,9 +49,13 @@ public class DubboRegistryFactory extends AbstractRegistryFactory {
         return url.setPath(RegistryService.class.getName())
                 .removeParameter(Constants.EXPORT_KEY).removeParameter(Constants.REFER_KEY)
                 .addParameter(Constants.INTERFACE_KEY, RegistryService.class.getName())
+                // 默认sticky是true
                 .addParameter(Constants.CLUSTER_STICKY_KEY, "true")
+                // 默认lazy是true
                 .addParameter(Constants.LAZY_CONNECT_KEY, "true")
+                // 默认reconnect是false
                 .addParameter(Constants.RECONNECT_KEY, "false")
+                // 默认timeout是10000
                 .addParameterIfAbsent(Constants.TIMEOUT_KEY, "10000")
                 .addParameterIfAbsent(Constants.CALLBACK_INSTANCES_LIMIT_KEY, "10000")
                 .addParameterIfAbsent(Constants.CONNECT_TIMEOUT_KEY, "10000")
@@ -86,7 +90,9 @@ public class DubboRegistryFactory extends AbstractRegistryFactory {
                 urls.add(url.setAddress(address));
             }
         }
+        // 服务的接口interface,refer
         RegistryDirectory<RegistryService> directory = new RegistryDirectory<RegistryService>(RegistryService.class, url.addParameter(Constants.INTERFACE_KEY, RegistryService.class.getName()).addParameterAndEncoded(Constants.REFER_KEY, url.toParameterString()));
+        // cluster工厂创建一个实例
         Invoker<RegistryService> registryInvoker = cluster.join(directory);
         RegistryService registryService = proxyFactory.getProxy(registryInvoker);
         DubboRegistry registry = new DubboRegistry(registryInvoker, registryService);

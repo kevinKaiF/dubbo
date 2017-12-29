@@ -34,6 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * ProtocolConfig
+ * 对应dubbo:protocol标签
  *
  * @export
  */

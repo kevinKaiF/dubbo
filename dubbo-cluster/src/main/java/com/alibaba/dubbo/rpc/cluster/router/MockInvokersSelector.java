@@ -39,6 +39,7 @@ public class MockInvokersSelector implements Router {
             return getNormalInvokers(invokers);
         } else {
             String value = invocation.getAttachments().get(Constants.INVOCATION_NEED_MOCK);
+            // 如果不需要mock，则返回所有非mock的invoker，否则返回所有支持mock的invoker
             if (value == null)
                 return getNormalInvokers(invokers);
             else if (Boolean.TRUE.toString().equalsIgnoreCase(value)) {
@@ -62,11 +63,13 @@ public class MockInvokersSelector implements Router {
     }
 
     private <T> List<Invoker<T>> getNormalInvokers(final List<Invoker<T>> invokers) {
+        // 如果不支持mock协议，直接返回
         if (!hasMockProviders(invokers)) {
             return invokers;
         } else {
             List<Invoker<T>> sInvokers = new ArrayList<Invoker<T>>(invokers.size());
             for (Invoker<T> invoker : invokers) {
+                // 过滤掉所有执行mock协议的invoker
                 if (!invoker.getUrl().getProtocol().equals(Constants.MOCK_PROTOCOL)) {
                     sInvokers.add(invoker);
                 }

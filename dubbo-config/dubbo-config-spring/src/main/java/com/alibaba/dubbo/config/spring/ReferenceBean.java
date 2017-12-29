@@ -33,6 +33,7 @@ import java.util.Map;
 
 /**
  * ReferenceFactoryBean
+ * 将referenceConfig的配置转为Spring控制的bean ReferenceBean
  *
  * @export
  */

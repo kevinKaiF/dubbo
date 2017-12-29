@@ -33,6 +33,7 @@ import com.alibaba.dubbo.rpc.support.MockInvoker;
 import java.util.List;
 
 /**
+ * MockClusterInvoker用于测试，还有限流，服务不可用等场景
  */
 public class MockClusterInvoker<T> implements Invoker<T> {
 
@@ -65,17 +66,20 @@ public class MockClusterInvoker<T> implements Invoker<T> {
 
     public Result invoke(Invocation invocation) throws RpcException {
         Result result = null;
-
+        // 是否启用mock
         String value = directory.getUrl().getMethodParameter(invocation.getMethodName(), Constants.MOCK_KEY, Boolean.FALSE.toString()).trim();
+        // false的话，直接invoker执行
         if (value.length() == 0 || value.equalsIgnoreCase("false")) {
             //no mock
             result = this.invoker.invoke(invocation);
+            // force的话，直接执行mockInvoker
         } else if (value.startsWith("force")) {
             if (logger.isWarnEnabled()) {
                 logger.info("force-mock: " + invocation.getMethodName() + " force-mock enabled , url : " + directory.getUrl());
             }
             //force:direct mock
             result = doMockInvoke(invocation, null);
+            // fail-mock的话，先执行invoker,然后再try...catch执行mockInvoker
         } else {
             //fail-mock
             try {
@@ -98,9 +102,10 @@ public class MockClusterInvoker<T> implements Invoker<T> {
     private Result doMockInvoke(Invocation invocation, RpcException e) {
         Result result = null;
         Invoker<T> minvoker;
-
+        // 选取invocation对应的Invokers
         List<Invoker<T>> mockInvokers = selectMockInvoker(invocation);
         if (mockInvokers == null || mockInvokers.size() == 0) {
+            // 否则从Url中获取配置mock的参数，构建MockInvoker
             minvoker = (Invoker<T>) new MockInvoker(directory.getUrl());
         } else {
             minvoker = mockInvokers.get(0);

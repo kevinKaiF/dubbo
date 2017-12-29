@@ -22,6 +22,7 @@ import java.util.Map;
 
 /**
  * MonitorConfig
+ * 对应dubbo:monitor标签
  *
  * @export
  */

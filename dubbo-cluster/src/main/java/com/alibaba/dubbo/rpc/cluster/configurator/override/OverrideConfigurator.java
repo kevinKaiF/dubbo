@@ -29,6 +29,15 @@ public class OverrideConfigurator extends AbstractConfigurator {
         super(url);
     }
 
+    /**
+     * 如果configUrl的配置参数与之前的配置参数有不同才进行覆盖
+     *
+     * configUrl的配置参数去覆盖之前的url的配置参数
+     *
+     * @param currentUrl
+     * @param configUrl
+     * @return
+     */
     public URL doConfigure(URL currentUrl, URL configUrl) {
         return currentUrl.addParameters(configUrl.getParameters());
     }

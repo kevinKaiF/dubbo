@@ -23,6 +23,7 @@ import com.alibaba.dubbo.rpc.support.ProtocolUtils;
 
 /**
  * AbstractConsumerConfig
+ * 对消费端的上层抽象
  *
  * @export
  * @see com.alibaba.dubbo.config.ReferenceConfig

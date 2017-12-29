@@ -32,6 +32,8 @@ import java.util.Map;
 
 /**
  * DataSourceStatusChecker
+ * 检测Spring 配置的datasource是否是可连接的
+ *
  */
 @Activate
 public class DataSourceStatusChecker implements StatusChecker {
@@ -60,6 +62,7 @@ public class DataSourceStatusChecker implements StatusChecker {
                 Connection connection = dataSource.getConnection();
                 try {
                     DatabaseMetaData metaData = connection.getMetaData();
+                    // 获取数据库信息
                     ResultSet resultSet = metaData.getTypeInfo();
                     try {
                         if (!resultSet.next()) {
@@ -70,8 +73,10 @@ public class DataSourceStatusChecker implements StatusChecker {
                     }
                     buf.append(metaData.getURL());
                     buf.append("(");
+                    // 数据库产品名称
                     buf.append(metaData.getDatabaseProductName());
                     buf.append("-");
+                    // 数据库产品版本号
                     buf.append(metaData.getDatabaseProductVersion());
                     buf.append(")");
                 } finally {

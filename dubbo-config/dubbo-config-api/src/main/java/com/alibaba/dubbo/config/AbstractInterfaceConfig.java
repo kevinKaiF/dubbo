@@ -43,7 +43,7 @@ import java.util.Map;
 
 /**
  * AbstractDefaultConfig
- *
+ * 对referenceConfig,serviceConfig的上层抽象
  * @export
  */
 public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {

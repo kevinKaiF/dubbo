@@ -45,7 +45,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ScriptRouter implements Router {
 
     private static final Logger logger = LoggerFactory.getLogger(ScriptRouter.class);
-
+    // 对引擎做个缓存
     private static final Map<String, ScriptEngine> engines = new ConcurrentHashMap<String, ScriptEngine>();
 
     private final ScriptEngine engine;
@@ -60,7 +60,9 @@ public class ScriptRouter implements Router {
         this.url = url;
         String type = url.getParameter(Constants.TYPE_KEY);
         this.priority = url.getParameter(Constants.PRIORITY_KEY, 0);
+        // rule 脚本
         String rule = url.getParameterAndDecoded(Constants.RULE_KEY);
+        // type 脚本引擎的类型，默认javascript
         if (type == null || type.length() == 0) {
             type = Constants.DEFAULT_SCRIPT_TYPE_KEY;
         }
@@ -89,6 +91,7 @@ public class ScriptRouter implements Router {
             List<Invoker<T>> invokersCopy = new ArrayList<Invoker<T>>(invokers);
             Compilable compilable = (Compilable) engine;
             Bindings bindings = engine.createBindings();
+            // 绑定脚本里面的参数
             bindings.put("invokers", invokersCopy);
             bindings.put("invocation", invocation);
             bindings.put("context", RpcContext.getContext());

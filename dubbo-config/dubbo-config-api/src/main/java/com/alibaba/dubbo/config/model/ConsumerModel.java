@@ -24,11 +24,15 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * referenceConfig即服务消费者的配置
+ * ConsumerModel对整个消费者配置的封装，封装了其代理类，服务名
+ */
 public class ConsumerModel {
     private ReferenceConfig metadata;
     private Object proxyObject;
     private String serviceName;
-
+    // 服务消费者接口可请求的全部方法
     private final Map<Method, ConsumerMethodModel> methodModels = new IdentityHashMap<Method, ConsumerMethodModel>();
 
     public ConsumerModel(String serviceName,ReferenceConfig metadata, Object proxyObject, Method[] methods) {

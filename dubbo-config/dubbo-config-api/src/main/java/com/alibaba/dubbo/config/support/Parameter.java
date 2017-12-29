@@ -24,22 +24,28 @@ import java.lang.annotation.Target;
 
 /**
  * Parameter
+ * AbstractConfig的默认配置，在初始化配置的时候会读取@Parameter的配置信息
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD})
 public @interface Parameter {
-
+    // AbstractConfig的属性名
     String key() default "";
 
+    // 是否是必须的
     boolean required() default false;
 
+    // 是否是必须要的
     boolean excluded() default false;
 
+    // 是否需要转义
     boolean escaped() default false;
 
+    // 是否是属性
     boolean attribute() default false;
 
+    // 是否需要追加到现在有的参数中
     boolean append() default false;
 
 }

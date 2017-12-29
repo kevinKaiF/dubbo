@@ -25,6 +25,7 @@ import java.util.List;
  *
  * @see com.alibaba.dubbo.registry.Registry
  * @see com.alibaba.dubbo.registry.RegistryFactory#getRegistry(URL)
+ * 对服务注册的上层定义
  */
 public interface RegistryService {
 
@@ -40,6 +41,7 @@ public interface RegistryService {
      *
      * @param url  Registration information , is not allowed to be empty, e.g: dubbo://10.20.153.10/com.alibaba.foo.BarService?version=1.0.0&application=kylin
      */
+    // 注册服务
     void register(URL url);
 
     /**
@@ -51,6 +53,7 @@ public interface RegistryService {
      *
      * @param url Registration information , is not allowed to be empty, e.g: dubbo://10.20.153.10/com.alibaba.foo.BarService?version=1.0.0&application=kylin
      */
+    // 注销服务
     void unregister(URL url);
 
     /**
@@ -68,6 +71,7 @@ public interface RegistryService {
      * @param url      Subscription condition, not allowed to be empty, e.g. consumer://10.20.153.10/com.alibaba.foo.BarService?version=1.0.0&application=kylin
      * @param listener A listener of the change event, not allowed to be empty
      */
+    // 订阅服务
     void subscribe(URL url, NotifyListener listener);
 
     /**
@@ -80,6 +84,7 @@ public interface RegistryService {
      * @param url      Subscription condition, not allowed to be empty, e.g. consumer://10.20.153.10/com.alibaba.foo.BarService?version=1.0.0&application=kylin
      * @param listener A listener of the change event, not allowed to be empty
      */
+    // 解除服务
     void unsubscribe(URL url, NotifyListener listener);
 
     /**
@@ -89,6 +94,7 @@ public interface RegistryService {
      * @return The registered information list, which may be empty, the meaning is the same as the parameters of {@link com.alibaba.dubbo.registry.NotifyListener#notify(List<URL>)}.
      * @see com.alibaba.dubbo.registry.NotifyListener#notify(List)
      */
+    // 查找服务
     List<URL> lookup(URL url);
 
 }
