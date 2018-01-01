@@ -40,12 +40,13 @@ public interface ProxyFactory {
      * create invoker.
      *
      * @param <T>
-     * @param proxy
-     * @param type
+     * @param proxy     服务实例，是个代理类
+     * @param type      服务类型
      * @param url
      * @return invoker
      */
     @Adaptive({Constants.PROXY_KEY})
+    // 生成invoker代理
     <T> Invoker<T> getInvoker(T proxy, Class<T> type, URL url) throws RpcException;
 
 }

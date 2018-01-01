@@ -47,6 +47,7 @@ public interface Protocol {
      * @throws RpcException thrown when error occurs during export the service, for example: port is occupied
      */
     @Adaptive
+    // 发布服务
     <T> Exporter<T> export(Invoker<T> invoker) throws RpcException;
 
     /**
@@ -65,6 +66,7 @@ public interface Protocol {
      * @throws RpcException when there's any error while connecting to the service provider
      */
     @Adaptive
+    // 消费服务
     <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException;
 
     /**

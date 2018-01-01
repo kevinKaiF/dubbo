@@ -98,21 +98,25 @@ public abstract class AbstractConfig implements Serializable {
         return value;
     }
 
+    // 反射执行所有的set方法
     protected static void appendProperties(AbstractConfig config) {
         if (config == null) {
             return;
         }
+        // dubbo.class-name.  前缀
         String prefix = "dubbo." + getTagName(config.getClass()) + ".";
         Method[] methods = config.getClass().getMethods();
         for (Method method : methods) {
             try {
                 String name = method.getName();
+                // 如果是set方法
                 if (name.length() > 3 && name.startsWith("set") && Modifier.isPublic(method.getModifiers())
                         && method.getParameterTypes().length == 1 && isPrimitive(method.getParameterTypes()[0])) {
                     String property = StringUtils.camelToSplitName(name.substring(3, 4).toLowerCase() + name.substring(4), ".");
-
                     String value = null;
+                    // 1.先从System中获取默认值
                     if (config.getId() != null && config.getId().length() > 0) {
+                        // dubbo.class-name.[id].[property]
                         String pn = prefix + config.getId() + "." + property;
                         value = System.getProperty(pn);
                         if (!StringUtils.isBlank(value)) {
@@ -120,12 +124,14 @@ public abstract class AbstractConfig implements Serializable {
                         }
                     }
                     if (value == null || value.length() == 0) {
+                        // dubbo.class-name.[property]
                         String pn = prefix + property;
                         value = System.getProperty(pn);
                         if (!StringUtils.isBlank(value)) {
                             logger.info("Use System Property " + pn + " to config dubbo");
                         }
                     }
+                    // 如果没有则从dubbo.properties文件中获取
                     if (value == null || value.length() == 0) {
                         Method getter;
                         try {
@@ -140,6 +146,7 @@ public abstract class AbstractConfig implements Serializable {
                         if (getter != null) {
                             if (getter.invoke(config, new Object[0]) == null) {
                                 if (config.getId() != null && config.getId().length() > 0) {
+                                    // dubbo.properties 配置
                                     value = ConfigUtils.getProperty(prefix + config.getId() + "." + property);
                                 }
                                 if (value == null || value.length() == 0) {
@@ -213,10 +220,13 @@ public abstract class AbstractConfig implements Serializable {
                     Object value = method.invoke(config, new Object[0]);
                     String str = String.valueOf(value).trim();
                     if (value != null && str.length() > 0) {
+                        // escaped 需要编译
                         if (parameter != null && parameter.escaped()) {
                             str = URL.encode(str);
                         }
+                        // append 需要追加
                         if (parameter != null && parameter.append()) {
+                            // default. 前缀
                             String pre = (String) parameters.get(Constants.DEFAULT_KEY + "." + key);
                             if (pre != null && pre.length() > 0) {
                                 str = pre + "," + str;
@@ -425,8 +435,10 @@ public abstract class AbstractConfig implements Serializable {
     }
 
     protected void appendAnnotation(Class<?> annotationClass, Object annotation) {
+        // 获取注解接口的所有方法
         Method[] methods = annotationClass.getMethods();
         for (Method method : methods) {
+            // 如果方法不是声明类不是Object，方法的返回值不是void，方法是无参的，方法是public的，方法不是静态的
             if (method.getDeclaringClass() != Object.class
                     && method.getReturnType() != void.class
                     && method.getParameterTypes().length == 0
@@ -434,12 +446,14 @@ public abstract class AbstractConfig implements Serializable {
                     && !Modifier.isStatic(method.getModifiers())) {
                 try {
                     String property = method.getName();
+                    // 如果方法名是interfaceClass, interfaceName
                     if ("interfaceClass".equals(property) || "interfaceName".equals(property)) {
                         property = "interface";
                     }
                     String setter = "set" + property.substring(0, 1).toUpperCase() + property.substring(1);
                     Object value = method.invoke(annotation, new Object[0]);
                     if (value != null && !value.equals(method.getDefaultValue())) {
+                        // 获取get方法的值
                         Class<?> parameterType = ReflectUtils.getBoxedClass(method.getReturnType());
                         if ("filter".equals(property) || "listener".equals(property)) {
                             parameterType = String.class;
@@ -448,6 +462,7 @@ public abstract class AbstractConfig implements Serializable {
                             parameterType = Map.class;
                             value = CollectionUtils.toStringMap((String[]) value);
                         }
+                        // 调用set方法
                         try {
                             Method setterMethod = getClass().getMethod(setter, new Class<?>[]{parameterType});
                             setterMethod.invoke(this, new Object[]{value});

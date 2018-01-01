@@ -45,11 +45,15 @@ public class ProtocolFilterWrapper implements Protocol {
 
     private static <T> Invoker<T> buildInvokerChain(final Invoker<T> invoker, String key, String group) {
         Invoker<T> last = invoker;
+        // 动态加载所有的Filter
         List<Filter> filters = ExtensionLoader.getExtensionLoader(Filter.class).getActivateExtension(invoker.getUrl(), key, group);
         if (filters.size() > 0) {
+            // 倒序遍历filter,形成一个chain,返回第一个filter
+            // invoke方法里传入了下一个invoker, filter可以根据自己的逻辑看是否要执行下一个filter
             for (int i = filters.size() - 1; i >= 0; i--) {
                 final Filter filter = filters.get(i);
                 final Invoker<T> next = last;
+                // 这个可以写个class封装起来
                 last = new Invoker<T>() {
 
                     public Class<T> getInterface() {

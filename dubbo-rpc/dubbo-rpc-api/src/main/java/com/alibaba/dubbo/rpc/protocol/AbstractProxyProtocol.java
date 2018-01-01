@@ -68,6 +68,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
             return exporter;
         }
         final Runnable runnable = doExport(proxyFactory.getProxy(invoker), invoker.getInterface(), invoker.getUrl());
+        // 覆盖unexport方法，销毁export
         exporter = new AbstractExporter<T>(invoker) {
             public void unexport() {
                 super.unexport();
@@ -87,6 +88,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
 
     public <T> Invoker<T> refer(final Class<T> type, final URL url) throws RpcException {
         final Invoker<T> tagert = proxyFactory.getInvoker(doRefer(type, url), type, url);
+        // 将invoker再包装一层
         Invoker<T> invoker = new AbstractInvoker<T>(type, url) {
             @Override
             protected Result doInvoke(Invocation invocation) throws Throwable {

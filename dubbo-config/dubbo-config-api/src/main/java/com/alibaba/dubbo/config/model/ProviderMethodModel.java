@@ -19,7 +19,7 @@ package com.alibaba.dubbo.config.model;
 import java.lang.reflect.Method;
 
 /**
- * 对服务提供者的方法封装
+ * 对服务提供者的方法封装，是服务方法的元数据
  */
 public class ProviderMethodModel {
     // 服务的方法
