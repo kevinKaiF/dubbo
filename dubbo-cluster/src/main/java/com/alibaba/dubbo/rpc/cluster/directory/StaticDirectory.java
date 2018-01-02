@@ -26,12 +26,12 @@ import java.util.List;
 
 /**
  * StaticDirectory
- *
+ * 配置group使用，保存所有可用的invokers
  */
 public class StaticDirectory<T> extends AbstractDirectory<T> {
 
     private final List<Invoker<T>> invokers;
-
+    // 只有invokers，而url, routes都是null
     public StaticDirectory(List<Invoker<T>> invokers) {
         this(null, invokers, null);
     }

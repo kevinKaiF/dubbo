@@ -20,7 +20,7 @@ import com.alibaba.dubbo.common.URL;
 
 /**
  * Configurator. (SPI, Prototype, ThreadSafe)
- *
+ * url的参数做二次配置处理，类似于filter,或者说像Spring BeanPostProcessor
  */
 public interface Configurator extends Comparable<Configurator> {
 

@@ -23,6 +23,7 @@ import com.alibaba.dubbo.common.extension.SPI;
 /**
  * ConfiguratorFactory. (SPI, Singleton, ThreadSafe)
  *
+ * 参数配置的工厂方法
  */
 @SPI
 public interface ConfiguratorFactory {
@@ -33,6 +34,7 @@ public interface ConfiguratorFactory {
      * @param url - configurator url.
      * @return configurator instance.
      */
+    // 表示获取URL中指定的协议
     @Adaptive("protocol")
     Configurator getConfigurator(URL url);
 

@@ -630,6 +630,7 @@ public class ExtensionLoader<T> {
                                             // class名称
                                             line = line.substring(i + 1).trim();
                                         }
+                                        // 对配置的class 加载，初始化
                                         if (line.length() > 0) {
                                             Class<?> clazz = Class.forName(line, true, classLoader);
                                             // 做校验
@@ -748,6 +749,7 @@ public class ExtensionLoader<T> {
         return compiler.compile(code, classLoader);
     }
 
+    // 动态构建java源码
     private String createAdaptiveExtensionClassCode() {
         StringBuilder codeBuidler = new StringBuilder();
         Method[] methods = type.getMethods();
@@ -762,8 +764,11 @@ public class ExtensionLoader<T> {
         if (!hasAdaptiveAnnotation)
             throw new IllegalStateException("No adaptive method on extension " + type.getName() + ", refuse to create the adaptive class!");
 
+        // 构建包名，和interface同一个目录
         codeBuidler.append("package " + type.getPackage().getName() + ";");
+        // 导入import
         codeBuidler.append("\nimport " + ExtensionLoader.class.getName() + ";");
+        // 声明class名称
         codeBuidler.append("\npublic class " + type.getSimpleName() + "$Adaptive" + " implements " + type.getCanonicalName() + " {");
 
         for (Method method : methods) {
@@ -772,6 +777,7 @@ public class ExtensionLoader<T> {
             Class<?>[] ets = method.getExceptionTypes();
 
             Adaptive adaptiveAnnotation = method.getAnnotation(Adaptive.class);
+            // 构造方法体
             StringBuilder code = new StringBuilder(512);
             if (adaptiveAnnotation == null) {
                 code.append("throw new UnsupportedOperationException(\"method ")
@@ -902,6 +908,7 @@ public class ExtensionLoader<T> {
                         type.getName(), Arrays.toString(value));
                 code.append(s);
 
+                // %<s 指的是上一个参数
                 s = String.format("\n%s extension = (%<s)%s.getExtensionLoader(%s.class).getExtension(extName);",
                         type.getName(), ExtensionLoader.class.getSimpleName(), type.getName());
                 code.append(s);
@@ -921,7 +928,9 @@ public class ExtensionLoader<T> {
                 code.append(");");
             }
 
+            // 构造方法名
             codeBuidler.append("\npublic " + rt.getCanonicalName() + " " + method.getName() + "(");
+            // 构造形参
             for (int i = 0; i < pts.length; i++) {
                 if (i > 0) {
                     codeBuidler.append(", ");
@@ -931,6 +940,7 @@ public class ExtensionLoader<T> {
                 codeBuidler.append("arg" + i);
             }
             codeBuidler.append(")");
+            // 声明异常
             if (ets.length > 0) {
                 codeBuidler.append(" throws ");
                 for (int i = 0; i < ets.length; i++) {
@@ -940,6 +950,7 @@ public class ExtensionLoader<T> {
                     codeBuidler.append(ets[i].getCanonicalName());
                 }
             }
+            // 添加方法体
             codeBuidler.append(" {");
             codeBuidler.append(code.toString());
             codeBuidler.append("\n}");
