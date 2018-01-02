@@ -530,6 +530,7 @@ public class ExtensionLoader<T> {
                         Class<?> pt = method.getParameterTypes()[0];
                         try {
                             String property = method.getName().length() > 3 ? method.getName().substring(3, 4).toLowerCase() + method.getName().substring(4) : "";
+                            // 这里注入的时候，对set方法默认使用extensionLoader加载一次class
                             Object object = objectFactory.getExtension(pt, property);
                             if (object != null) {
                                 method.invoke(instance, object);
@@ -854,6 +855,7 @@ public class ExtensionLoader<T> {
                             sb.append(charArray[i]);
                         }
                     }
+                    // 默认type的simpleName
                     value = new String[]{sb.toString()};
                 }
 

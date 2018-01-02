@@ -201,6 +201,7 @@ public class DubboProtocol extends AbstractProtocol {
         URL url = invoker.getUrl();
 
         // export service.
+        // group/interface-name:version:port
         String key = serviceKey(url);
         DubboExporter<T> exporter = new DubboExporter<T>(invoker, key, exporterMap);
         exporterMap.put(key, exporter);
@@ -220,6 +221,7 @@ public class DubboProtocol extends AbstractProtocol {
             }
         }
 
+        // 创建服务提供者的服务器
         openServer(url);
 
         return exporter;

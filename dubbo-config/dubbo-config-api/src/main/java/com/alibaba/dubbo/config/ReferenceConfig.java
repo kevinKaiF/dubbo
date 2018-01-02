@@ -213,6 +213,7 @@ public class ReferenceConfig<T> extends AbstractReferenceConfig {
         String resolveFile = null;
         if (resolve == null || resolve.length() == 0) {
             resolveFile = System.getProperty("dubbo.resolve.file");
+            // 获取reference默认的文件
             if (resolveFile == null || resolveFile.length() == 0) {
                 File userResolveFile = new File(new File(System.getProperty("user.home")), "dubbo-resolve.properties");
                 if (userResolveFile.exists()) {

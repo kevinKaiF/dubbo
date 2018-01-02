@@ -90,7 +90,7 @@ public class ProviderModel {
 
         for (Method method : methodsToExport) {
             method.setAccessible(true);
-
+            // 获取服务实现类所有的方法，将每个服务实现类的方法封装成providerMethodModel
             List<ProviderMethodModel> methodModels = methods.get(method.getName());
             if (methodModels == null) {
                 methodModels = new ArrayList<ProviderMethodModel>(1);

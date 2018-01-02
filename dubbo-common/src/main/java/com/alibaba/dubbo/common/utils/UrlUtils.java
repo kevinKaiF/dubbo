@@ -35,6 +35,7 @@ public class UrlUtils {
         if (address.indexOf("://") >= 0) {
             url = address;
         } else {
+            // address有多个逗号隔开，默认选取第一个地址其他地址作为backup地址
             String[] addresses = Constants.COMMA_SPLIT_PATTERN.split(address);
             url = addresses[0];
             if (addresses.length > 1) {
@@ -48,6 +49,7 @@ public class UrlUtils {
                 url += "?" + Constants.BACKUP_KEY + "=" + backup.toString();
             }
         }
+        // 默认dubbo协议
         String defaultProtocol = defaults == null ? null : defaults.get("protocol");
         if (defaultProtocol == null || defaultProtocol.length() == 0) {
             defaultProtocol = "dubbo";
@@ -128,6 +130,7 @@ public class UrlUtils {
         if (address == null || address.length() == 0) {
             return null;
         }
+        // 注册地址多个，用; | 分开
         String[] addresses = Constants.REGISTRY_SPLIT_PATTERN.split(address);
         if (addresses == null || addresses.length == 0) {
             return null; //here won't be empty

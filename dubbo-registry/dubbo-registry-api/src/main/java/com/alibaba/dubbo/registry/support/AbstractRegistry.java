@@ -287,6 +287,12 @@ public abstract class AbstractRegistry implements Registry {
         registered.remove(url);
     }
 
+    /**
+     * 订阅对URL的监听事件绑定到本地，缓存起来
+     *
+     * @param url      Subscription condition, not allowed to be empty, e.g. consumer://10.20.153.10/com.alibaba.foo.BarService?version=1.0.0&application=kylin
+     * @param listener A listener of the change event, not allowed to be empty
+     */
     public void subscribe(URL url, NotifyListener listener) {
         if (url == null) {
             throw new IllegalArgumentException("subscribe url == null");
@@ -370,6 +376,7 @@ public abstract class AbstractRegistry implements Registry {
         }
     }
 
+    // notify的作用只有两个：更新/user-name/.dubbo目录下的文件和触发监听事件
     protected void notify(URL url, NotifyListener listener, List<URL> urls) {
         if (url == null) {
             throw new IllegalArgumentException("notify url == null");
@@ -385,6 +392,7 @@ public abstract class AbstractRegistry implements Registry {
         if (logger.isInfoEnabled()) {
             logger.info("Notify urls for subscribe url " + url + ", urls: " + urls);
         }
+        // key:category,可能是providers,configurators,routers, value:list<url>
         Map<String, List<URL>> result = new HashMap<String, List<URL>>();
         for (URL u : urls) {
             if (UrlUtils.isMatch(url, u)) {

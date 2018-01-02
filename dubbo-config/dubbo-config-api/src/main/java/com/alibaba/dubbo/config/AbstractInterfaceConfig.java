@@ -143,8 +143,10 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
             throw new IllegalStateException(
                     "No such application config! Please add <dubbo:application name=\"...\" /> to your spring config.");
         }
+        // 初始化applicationConfig，并反射执行set方法
         appendProperties(application);
 
+        // dubbo.service.shutdown.wait 服务关闭等待时间的配置
         String wait = ConfigUtils.getProperty(Constants.SHUTDOWN_WAIT_KEY);
         if (wait != null && wait.trim().length() > 0) {
             System.setProperty(Constants.SHUTDOWN_WAIT_KEY, wait.trim());
@@ -160,7 +162,9 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
         checkRegistry();
         List<URL> registryList = new ArrayList<URL>();
         if (registries != null && registries.size() > 0) {
+            // 遍历所有的registries
             for (RegistryConfig config : registries) {
+                // 获取注册的地址
                 String address = config.getAddress();
                 if (address == null || address.length() == 0) {
                     address = Constants.ANYHOST_VALUE;
@@ -172,11 +176,17 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                 if (address != null && address.length() > 0
                         && !RegistryConfig.NO_AVAILABLE.equalsIgnoreCase(address)) {
                     Map<String, String> map = new HashMap<String, String>();
+                    // 初始化applicationConfig的@Param注解的方法
                     appendParameters(map, application);
+                    // 初始化registryConfig的@Param注解的方法
+                    // 这个过程，registryConfig的配置会覆盖applicationConfig的配置
                     appendParameters(map, config);
                     map.put("path", RegistryService.class.getName());
+                    // dubbo 版本号
                     map.put("dubbo", Version.getVersion());
+                    // timestamp 服务发布时间
                     map.put(Constants.TIMESTAMP_KEY, String.valueOf(System.currentTimeMillis()));
+                    // 当前进程的pid
                     if (ConfigUtils.getPid() > 0) {
                         map.put(Constants.PID_KEY, String.valueOf(ConfigUtils.getPid()));
                     }
@@ -184,6 +194,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                         if (ExtensionLoader.getExtensionLoader(RegistryFactory.class).hasExtension("remote")) {
                             map.put("protocol", "remote");
                         } else {
+                            // 默认协议是dubbo
                             map.put("protocol", "dubbo");
                         }
                     }
@@ -191,6 +202,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                     for (URL url : urls) {
                         url = url.addParameter(Constants.REGISTRY_KEY, url.getProtocol());
                         url = url.setProtocol(Constants.REGISTRY_PROTOCOL);
+                        // 如果是provider,register 或者 非provider,subscribe
                         if ((provider && url.getParameter(Constants.REGISTER_KEY, true))
                                 || (!provider && url.getParameter(Constants.SUBSCRIBE_KEY, true))) {
                             registryList.add(url);
@@ -301,10 +313,12 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                 throw new IllegalStateException("No such constructor \"public " + localClass.getSimpleName() + "(" + interfaceClass.getName() + ")\" in local implementation class " + localClass.getName());
             }
         }
+        // 是否启用mock
         if (ConfigUtils.isNotEmpty(mock)) {
             if (mock.startsWith(Constants.RETURN_PREFIX)) {
                 String value = mock.substring(Constants.RETURN_PREFIX.length());
                 try {
+                    // 目的是先解析下mock的模式，是否能正常解析
                     MockInvoker.parseMockValue(value);
                 } catch (Exception e) {
                     throw new IllegalStateException("Illegal mock json value in <dubbo:service ... mock=\"" + mock + "\" />");
@@ -315,6 +329,7 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                     throw new IllegalStateException("The mock implementation class " + mockClass.getName() + " not implement interface " + interfaceClass.getName());
                 }
                 try {
+                    // 检验下mock方法的默认构造方法
                     mockClass.getConstructor(new Class<?>[0]);
                 } catch (NoSuchMethodException e) {
                     throw new IllegalStateException("No such empty constructor \"public " + mockClass.getSimpleName() + "()\" in mock implementation class " + mockClass.getName());

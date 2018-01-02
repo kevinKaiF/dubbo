@@ -62,6 +62,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
 
     public FailbackRegistry(URL url) {
         super(url);
+        // retry.period 尝试间隔
         int retryPeriod = url.getParameter(Constants.REGISTRY_RETRY_PERIOD_KEY, Constants.DEFAULT_REGISTRY_RETRY_PERIOD);
         this.retryFuture = retryExecutor.scheduleWithFixedDelay(new Runnable() {
             public void run() {
@@ -129,6 +130,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             return;
         }
         super.register(url);
+        // 清理失败记录
         failedRegistered.remove(url);
         failedUnregistered.remove(url);
         try {
@@ -152,6 +154,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
 
             // Record a failed registration request to a failed list, retry regularly
+            // 如果注册失败，则添加到failedRegistered集合，等待异步调用执行
             failedRegistered.add(url);
         }
     }
@@ -162,6 +165,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             return;
         }
         super.unregister(url);
+        // 清理失败记录
         failedRegistered.remove(url);
         failedUnregistered.remove(url);
         try {
@@ -185,6 +189,7 @@ public abstract class FailbackRegistry extends AbstractRegistry {
             }
 
             // Record a failed registration request to a failed list, retry regularly
+            // 解除注册失败，则添加到集合
             failedUnregistered.add(url);
         }
     }

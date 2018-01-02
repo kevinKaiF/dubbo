@@ -64,9 +64,11 @@ public class HessianProtocol extends AbstractProxyProtocol {
     }
 
     protected <T> Runnable doExport(T impl, Class<T> type, URL url) throws RpcException {
+        // 获取服务端本地ip
         String addr = getAddr(url);
         HttpServer server = serverMap.get(addr);
         if (server == null) {
+            // 初始化服务器
             server = httpBinder.bind(url, new HessianHandler());
             serverMap.put(addr, server);
         }
