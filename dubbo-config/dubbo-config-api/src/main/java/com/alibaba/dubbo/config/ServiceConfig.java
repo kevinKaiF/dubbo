@@ -39,37 +39,54 @@ import com.alibaba.dubbo.rpc.service.GenericService;
 import com.alibaba.dubbo.rpc.support.ProtocolUtils;
 
 import java.lang.reflect.Method;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.net.*;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.alibaba.dubbo.common.utils.NetUtils.LOCALHOST;
-import static com.alibaba.dubbo.common.utils.NetUtils.getAvailablePort;
-import static com.alibaba.dubbo.common.utils.NetUtils.getLocalHost;
-import static com.alibaba.dubbo.common.utils.NetUtils.isInvalidLocalHost;
-import static com.alibaba.dubbo.common.utils.NetUtils.isInvalidPort;
+import static com.alibaba.dubbo.common.utils.NetUtils.*;
 
 /**
  * ServiceConfig
  * 对应dubbo:service标签，暴露服务
+ *
  * @export
  */
 public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private static final long serialVersionUID = 3033787999037024738L;
 
+    /**
+     * package com.alibaba.dubbo.rpc;
+     * import com.alibaba.dubbo.common.extension.ExtensionLoader;
+     * public class Protocol$Adaptive implements com.alibaba.dubbo.rpc.Protocol {
+     *
+     * public void destroy() {
+     *  throw new UnsupportedOperationException("method public abstract void com.alibaba.dubbo.rpc.Protocol.destroy() of interface com.alibaba.dubbo.rpc.Protocol is not adaptive method!");
+     * }
+     * public int getDefaultPort() {
+     *  throw new UnsupportedOperationException("method public abstract int com.alibaba.dubbo.rpc.Protocol.getDefaultPort() of interface com.alibaba.dubbo.rpc.Protocol is not adaptive method!");
+     * }
+     *
+     * public com.alibaba.dubbo.rpc.Exporter export(com.alibaba.dubbo.rpc.Invoker arg0) throws com.alibaba.dubbo.rpc.RpcException {
+     * if (arg0 == null) throw new IllegalArgumentException("com.alibaba.dubbo.rpc.Invoker argument == null");
+     * if (arg0.getUrl() == null) throw new IllegalArgumentException("com.alibaba.dubbo.rpc.Invoker argument getUrl() == null");com.alibaba.dubbo.common.URL url = arg0.getUrl();
+     * String extName = ( url.getProtocol() == null ? "dubbo" : url.getProtocol() );
+     * if(extName == null) throw new IllegalStateException("Fail to get extension(com.alibaba.dubbo.rpc.Protocol) name from url(" + url.toString() + ") use keys([protocol])");
+     * com.alibaba.dubbo.rpc.Protocol extension = (com.alibaba.dubbo.rpc.Protocol)ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.rpc.Protocol.class).getExtension(extName);
+     * return extension.export(arg0);
+     * }
+     * public com.alibaba.dubbo.rpc.Invoker refer(java.lang.Class arg0, com.alibaba.dubbo.common.URL arg1) throws com.alibaba.dubbo.rpc.RpcException {
+     * if (arg1 == null) throw new IllegalArgumentException("url == null");
+     * com.alibaba.dubbo.common.URL url = arg1;
+     * String extName = ( url.getProtocol() == null ? "dubbo" : url.getProtocol() );
+     * if(extName == null) throw new IllegalStateException("Fail to get extension(com.alibaba.dubbo.rpc.Protocol) name from url(" + url.toString() + ") use keys([protocol])");
+     * com.alibaba.dubbo.rpc.Protocol extension = (com.alibaba.dubbo.rpc.Protocol)ExtensionLoader.getExtensionLoader(com.alibaba.dubbo.rpc.Protocol.class).getExtension(extName);
+     * return extension.refer(arg0, arg1);
+     * }
+     * }
+     */
     private static final Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
 
     private static final ProxyFactory proxyFactory = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
@@ -77,30 +94,30 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
     private static final Map<String, Integer> RANDOM_PORT_MAP = new HashMap<String, Integer>();
 
     private static final ScheduledExecutorService delayExportExecutor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("DubboServiceDelayExporter", true));
-    private final List<URL> urls = new ArrayList<URL>();
-    private final List<Exporter<?>> exporters = new ArrayList<Exporter<?>>();
+    private final        List<URL>                urls                = new ArrayList<URL>();
+    private final        List<Exporter<?>>        exporters           = new ArrayList<Exporter<?>>();
     // interface type
     // 服务provider的接口名称
-    private String interfaceName;
+    private                    String             interfaceName;
     // 服务provider的接口class
-    private Class<?> interfaceClass;
+    private                    Class<?>           interfaceClass;
     // reference to interface impl
     // 服务provider的实现类
-    private T ref;
+    private                    T                  ref;
     // service name
     // 服务的名称
-    private String path;
+    private                    String             path;
     // method configuration
     // provider的方法配置
-    private List<MethodConfig> methods;
+    private                    List<MethodConfig> methods;
     // 服务provider的配置
-    private ProviderConfig provider;
+    private                    ProviderConfig     provider;
     // 服务是否暴露
-    private transient volatile boolean exported;
+    private transient volatile boolean            exported;
     // 服务是否不暴露
-    private transient volatile boolean unexported;
+    private transient volatile boolean            unexported;
     // 服务是否是泛型
-    private volatile String generic;
+    private volatile           String             generic;
 
     public ServiceConfig() {
     }
@@ -351,8 +368,8 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
         }
         if (!interfaceClass.isInstance(ref)) {
             throw new IllegalStateException("The class "
-                    + ref.getClass().getName() + " unimplemented interface "
-                    + interfaceClass + "!");
+                                            + ref.getClass().getName() + " unimplemented interface "
+                                            + interfaceClass + "!");
         }
     }
 
@@ -733,7 +750,7 @@ public class ServiceConfig<T> extends AbstractServiceConfig {
 
     private void checkProtocol() {
         if ((protocols == null || protocols.size() == 0)
-                && provider != null) {
+            && provider != null) {
             setProtocols(provider.getProtocols());
         }
         // backward compatibility

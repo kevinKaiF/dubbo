@@ -118,11 +118,14 @@ public class RegistryProtocol implements Protocol {
 
     public <T> Exporter<T> export(final Invoker<T> originInvoker) throws RpcException {
         //export invoker
+        // export指定的protocol发布服务
+        // 将注册URL转为export指定协议的URL，发布服务
         final ExporterChangeableWrapper<T> exporter = doLocalExport(originInvoker);
 
         URL registryUrl = getRegistryUrl(originInvoker);
-
         //registry provider
+        // registry指定的注册器
+        // 将注册URL转为registry指定注册起的URL，获取registry指定的注册器，比如zookeeper,redis
         final Registry registry = getRegistry(originInvoker);
         final URL registedProviderUrl = getRegistedProviderUrl(originInvoker);
 
@@ -216,6 +219,7 @@ public class RegistryProtocol implements Protocol {
     }
 
     private URL getRegistryUrl(Invoker<?> originInvoker) {
+        // 获取原始注册URL，可能是registry://
         URL registryUrl = originInvoker.getUrl();
         if (Constants.REGISTRY_PROTOCOL.equals(registryUrl.getProtocol())) {
             String protocol = registryUrl.getParameter(Constants.REGISTRY_KEY, Constants.DEFAULT_DIRECTORY);
@@ -254,6 +258,8 @@ public class RegistryProtocol implements Protocol {
      * @return
      */
     private URL getProviderUrl(final Invoker<?> origininvoker) {
+        // export 指定了发布服务的类型，比如dubbo,http
+        // 转成export指定类型的URL，比如dubbo 就会转成 dubbo://
         String export = origininvoker.getUrl().getParameterAndDecoded(Constants.EXPORT_KEY);
         if (export == null || export.length() == 0) {
             throw new IllegalArgumentException("The registry export url is null! registry: " + origininvoker.getUrl());

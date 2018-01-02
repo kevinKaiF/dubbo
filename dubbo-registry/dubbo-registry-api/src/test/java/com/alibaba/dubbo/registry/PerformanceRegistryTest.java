@@ -22,6 +22,7 @@ import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
 import com.alibaba.dubbo.common.utils.NetUtils;
 
+import com.alibaba.dubbo.rpc.Protocol;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -63,6 +64,12 @@ public class PerformanceRegistryTest extends TestCase {
                 }
             }
         }
+    }
+
+    @Test
+    public void testProtocol() {
+        Protocol protocol = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
+        System.out.println(protocol);
     }
 
 }

@@ -200,7 +200,10 @@ public abstract class AbstractInterfaceConfig extends AbstractMethodConfig {
                     }
                     List<URL> urls = UrlUtils.parseURLs(address, map);
                     for (URL url : urls) {
+                        // registry 用于记录注册器的类型，比如zookeeper,redis等
+                        // url.getProtocol是原来的注册器的类型，比如zookeeper,redis等
                         url = url.addParameter(Constants.REGISTRY_KEY, url.getProtocol());
+                        // 重置协议为 registry://
                         url = url.setProtocol(Constants.REGISTRY_PROTOCOL);
                         // 如果是provider,register 或者 非provider,subscribe
                         if ((provider && url.getParameter(Constants.REGISTER_KEY, true))
