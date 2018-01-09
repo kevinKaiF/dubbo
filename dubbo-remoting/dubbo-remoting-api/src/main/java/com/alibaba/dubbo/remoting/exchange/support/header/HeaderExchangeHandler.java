@@ -165,6 +165,7 @@ public class HeaderExchangeHandler implements ChannelHandlerDelegate {
                     handlerEvent(channel, request);
                 } else {
                     if (request.isTwoWay()) {
+                        // 处理请求
                         Response response = handleRequest(exchangeChannel, request);
                         channel.send(response);
                     } else {

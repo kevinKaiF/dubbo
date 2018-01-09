@@ -32,6 +32,7 @@ import com.alibaba.dubbo.rpc.RpcResult;
 public class EchoFilter implements Filter {
 
     public Result invoke(Invoker<?> invoker, Invocation inv) throws RpcException {
+        // 如果是客户端的echo，则直接返回参数就行了
         if (inv.getMethodName().equals(Constants.$ECHO) && inv.getArguments() != null && inv.getArguments().length == 1)
             return new RpcResult(inv.getArguments()[0]);
         return invoker.invoke(inv);

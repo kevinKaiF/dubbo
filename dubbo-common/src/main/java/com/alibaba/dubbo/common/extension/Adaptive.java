@@ -55,6 +55,7 @@ public @interface Adaptive {
      *
      * @return parameter key names in URL
      */
+    // 定义适配的url参数名
     String[] value() default {};
 
 }

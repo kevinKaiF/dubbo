@@ -67,6 +67,7 @@ public interface Protocol {
      */
     @Adaptive
     // 消费服务
+    // Adaptive是适配器标志，根据URL的协议来适配指定的Protocol来真正的执行refer
     <T> Invoker<T> refer(Class<T> type, URL url) throws RpcException;
 
     /**

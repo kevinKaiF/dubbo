@@ -59,6 +59,7 @@ public @interface SPI {
     /**
      * default extension name
      */
+    // 定义默认的加载的class名称，这个名称是前缀名
     String value() default "";
 
 }

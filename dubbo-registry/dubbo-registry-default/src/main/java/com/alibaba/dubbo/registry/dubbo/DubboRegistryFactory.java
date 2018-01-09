@@ -83,6 +83,7 @@ public class DubboRegistryFactory extends AbstractRegistryFactory {
         url = getRegistryURL(url);
         List<URL> urls = new ArrayList<URL>();
         urls.add(url.removeParameter(Constants.BACKUP_KEY));
+        // 获取backup,并添加到url中，作为可调用的invoker
         String backup = url.getParameter(Constants.BACKUP_KEY);
         if (backup != null && backup.length() > 0) {
             String[] addresses = Constants.COMMA_SPLIT_PATTERN.split(backup);

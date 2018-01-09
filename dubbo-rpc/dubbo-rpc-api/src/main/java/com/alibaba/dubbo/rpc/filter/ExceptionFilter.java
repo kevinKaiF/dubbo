@@ -69,6 +69,7 @@ public class ExceptionFilter implements Filter {
                     }
                     // directly throw if the exception appears in the signature
                     try {
+                        // 判断是否是方法自身的异常
                         Method method = invoker.getInterface().getMethod(invocation.getMethodName(), invocation.getParameterTypes());
                         Class<?>[] exceptionClassses = method.getExceptionTypes();
                         for (Class<?> exceptionClass : exceptionClassses) {

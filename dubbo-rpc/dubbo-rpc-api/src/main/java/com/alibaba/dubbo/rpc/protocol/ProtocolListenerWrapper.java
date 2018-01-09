@@ -36,6 +36,7 @@ import java.util.Collections;
  */
 public class ProtocolListenerWrapper implements Protocol {
     static {
+        // 启动telnet服务？
         try {
             Class serverClass = Protocol.class.getClassLoader().loadClass("com.alibaba.dubbo.qos.server.Server");
             Method serverGetInstanceMethod = serverClass.getMethod("getInstance");

@@ -55,7 +55,8 @@ import java.util.Set;
 
 /**
  * RegistryDirectory
- * 针对consumer的Directory
+ * 针对consumer的Directory，构造方法中的URL是注册地址，比如zookeeper
+ * 对URL解析实际上对整个ulr中注册的服务的解析
  */
 public class RegistryDirectory<T> extends AbstractDirectory<T> implements NotifyListener {
 
@@ -108,6 +109,7 @@ public class RegistryDirectory<T> extends AbstractDirectory<T> implements Notify
         this.serviceKey = url.getServiceKey();
         // 解析URL的参数
         // URL的格式是 protocol-name://host:port/service-name?param1=value1&param2=value2..paramN=valueN
+        // 这里的refer是注册服务所有的参数解析，有点类似http的refer
         this.queryMap = StringUtils.parseQueryString(url.getParameterAndDecoded(Constants.REFER_KEY));
         this.overrideDirectoryUrl = this.directoryUrl = url.setPath(url.getServiceInterface()).clearParameters().addParameters(queryMap).removeParameter(Constants.MONITOR_KEY);
         // group 分组

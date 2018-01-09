@@ -30,7 +30,8 @@ import com.alibaba.dubbo.rpc.RpcException;
 import java.util.List;
 
 /**
- * ListenerProtocol
+ * ProtocolFilterWrapper
+ * 绑定请求的过滤器，整个filter是链式的
  */
 public class ProtocolFilterWrapper implements Protocol {
 
